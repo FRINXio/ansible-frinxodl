@@ -1,0 +1,11 @@
+---
+- name: create subInterface
+  hosts: localhost
+  tasks:
+  - name: create subInterface
+    assignMainInterfIP:
+      node_id:
+      eth_url_intf_id:
+      eth_ifc_ip:
+      eth_ifc_pref_length:
+      authorization:

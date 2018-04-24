@@ -1,0 +1,19 @@
+---
+- name: mount cisco device
+  hosts: localhost
+  tasks:
+  - name: mount cisco device
+    mountCiscoDevice:
+      network-topology:node-id:
+      cli-topology:host:
+      cli-topology:port:
+      cli-topology:transport-type:
+      cli-topology:device-type:
+      cli-topology:device-version:
+      cli-topology:username:
+      cli-topology:password:
+      cli-topology:journal-size:
+      cli-topology:dry-run-journal-size:
+      cli-topology:keepalive-delay:
+      cli-topology:keepalive-timeout:
+      authorization:
