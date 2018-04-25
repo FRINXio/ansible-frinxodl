@@ -36,7 +36,9 @@ Your *.yml file should have this paramters:
   tasks:
   - name: **You can name it whatever you want**
     mountCiscoDevice:
-      odl_ip: <default> localhost: 8181 </>
+      odl_ip: <default> localhost </>
+      odl_ip_port: <default> 8181 </>
+      authorization: <default> Basic YWRtaW46YWRtaW4= </>
       network-topology:node-id:
       cli-topology:host:
       cli-topology:port:
@@ -49,7 +51,6 @@ Your *.yml file should have this paramters:
       cli-topology:dry-run-journal-size:
       cli-topology:keepalive-delay:
       cli-topology:keepalive-timeout:
-      authorization:
 ```
 
 Fill the details after colon ':'
@@ -70,12 +71,13 @@ Your *.yml file should have this parameters:
   - name: **You can name it whatever you want**
     createSubInt:
       node_id:
-      odl_ip: <default> localhost: 8181 </>
-      eth_url_intf_id:
+      odl_ip: <default> localhost </>
+      odl_ip_port: <default> 8181 </>
       subinterfIndex: <default> 0 </>
+      authorization: <default> Basic YWRtaW46YWRtaW4= </>
+      eth_url_intf_id:
       eth_ifc_ip:
       eth_ifc_pref_length:
-      authorization:
 ```
 Fill the details after colon ':'
 Then run your file with:

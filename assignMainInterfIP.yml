@@ -4,8 +4,11 @@
   tasks:
   - name: create subInterface
     assignMainInterfIP:
+#    odl_ip:
+#    odl_ip_port:
+#    authorization:
+#    subinterfIndex:
       node_id:
       eth_url_intf_id:
       eth_ifc_ip:
       eth_ifc_pref_length:
-      authorization:

@@ -1,9 +1,5 @@
 #!/usr/bin/python
 
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
-import json
-
 DOCUMENTATION = '''
 ---
 module: create subinterface
@@ -36,16 +32,18 @@ message:
 '''
 
 
+from ansible.module_utils.basic import *
+from ansible.module_utils.urls import *
+import json
 def main():
     arguments = {
         "node_id": {"required": True, "type": "str"},
-        "odl_ip": {"default": "localhost", "type": "str"},
-        "odl_ip_port": {"default": "8181", "type": "str"},
+        "odl_ip": {"default": "localhost:8181", "type": "str"},
         "eth_url_intf_id": {"required": True, "type": "str"},
         "eth_ifc_ip": {"required": True, "type": "str"},
         "subinterfIndex": {"default": 0, "type": "str"},
         "eth_ifc_pref_length": {"required": True, "type": "str"},
-        "authorization": {"default": "Basic YWRtaW46YWRtaW4=", "type": "str"}
+        "authorization": {"required": True, "type": "str"}
     }
 
     module = AnsibleModule(argument_spec=arguments)
@@ -53,17 +51,15 @@ def main():
         changed=False,
         result=''
     )
-    createsubint(module, response)
+    createSubint(module, response)
     module.exit_json(changed=False, meta=response)
 
 
-def createsubint(module, response):
-    eth_url_intf_id = urllib_request.quote(module.params['eth_url_intf_id'], safe='')
-    url = urllib_request.quote(module.params['odl_ip'] + ':' + module.params['odl_ip_port'] +
-                        '/restconf/config/network-topology:network-topology/topology/uniconfig/node/' + module.params['node_id'] +
-                        '/frinx-uniconfig-topology:configuration/frinx-openconfig-interfaces:interfaces/interface/' + eth_url_intf_id + '/subinterfaces')
-    url = 'http://' + url
+def createSubint(module, response):
 
+    eth_url_intf_id = module.params["eth_url_intf_id"].split('/')
+    url = ('http://' + module.params["odl_ip"] + '/restconf/config/network-topology:network-topology/topology/uniconfig/node/' + module.params['node_id'] +
+                           '/frinx-uniconfig-topology:configuration/frinx-openconfig-interfaces:interfaces/interface/' + eth_url_intf_id[0] + '%2F' + eth_url_intf_id[1] + '/subinterfaces')
     try:
         open_url(url, method='PUT', data=json.dumps({
                 "subinterfaces": {
@@ -89,15 +85,13 @@ def createsubint(module, response):
                         }
                     ]
                 }
-            }), force_basic_auth=True, validate_certs=False,
-                 headers={'Authorization': module.params['authorization'], 'Accept': 'application/json', 'Content-Type': 'application/json'})
-    except urllib_request.HTTPError:
-        response['msg'] = 'http error'
-        response['url'] = url
+            }), force_basic_auth=True, validate_certs=False, headers={'Authorization': module.params['authorization'], 'Content-Type': 'application/json'})
+    except:
+        response['msg'] = 'Problem with data parsed'
         module.fail_json(**response)
 
     try:
-        open_url(url, method="GET", force_basic_auth=True, validate_certs=False, headers={'Authorization': module.params['authorization'], 'Accept': 'application/json', 'Content-Type': 'application/json'})
+        open_url(url, method="GET", force_basic_auth=True, validate_certs=False, headers={'Authorization': module.params['authorization'],                                                                                     'Content-Type': 'application/json', 'Accept': 'application/json'})
     except:
         response['changed'] = False
         response['result'] = 'Subinterface was not created'

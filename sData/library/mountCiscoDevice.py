@@ -40,14 +40,13 @@ message:
 
 from ansible.module_utils.basic import *
 from ansible.module_utils.urls import *
-import urllib
 import json
 
 
 def main():
     arguments = {
         "odl_ip": {"default": "localhost", "type": "str"},
-        "odl_ip_port": {"default": "8181", "type": "str"},
+        "odl_ip_port:": {"default": "8181", "type":"str"},
         "network-topology:node-id": {"required": True, "type": "str"},
         "cli-topology:host": {"required": True, "type": "str"},
         "cli-topology:port": {"required": True, "type": "str"},
@@ -72,11 +71,8 @@ def main():
     mount(module, response)
 
 def mount(module, response):
-    url = urllib_request.quote(module.params["odl_ip"] + ':' + module.params['odl_ip_port'] + '/restconf/config/network-topology:network-topology/topology/cli/node/' +
-              module.params["network-topology:node-id"])
-    url = 'http://' + url
-
-    open_url(url, method="PUT", data=json.dumps({
+    open_url('http://' + module.params["odl_ip"] + ':' + module.params['odl_ip_port'] + '/restconf/config/network-topology:network-topology/topology/cli/node/' +
+             module.params["network-topology:node-id"], method="PUT", data=json.dumps({
         "network-topology:node":
         {
           "network-topology:node-id": module.params["network-topology:node-id"],

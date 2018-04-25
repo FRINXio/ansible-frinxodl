@@ -1,0 +1,10 @@
+---
+- name: create subInterface
+  hosts: localhost
+  tasks:
+  - name: create subInterface
+    assignMainInterfIP:
+      node_id: IOS1
+      eth_url_intf_id: GigabitEthernet1/0
+      eth_ifc_ip: 10.10.10.0
+      eth_ifc_pref_length: 24
